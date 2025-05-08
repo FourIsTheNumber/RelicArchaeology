@@ -1,5 +1,7 @@
 package fouristhenumber.relicarchaeology.common.structure;
 
+import static fouristhenumber.relicarchaeology.RelicArchaeology.structureDefinitions;
+
 import java.util.Random;
 
 import net.minecraft.world.World;
@@ -9,20 +11,19 @@ import cpw.mods.fml.common.IWorldGenerator;
 
 public class StructureGenHandler implements IWorldGenerator {
 
-    private final StructureTest structure = new StructureTest();
-
     @Override
     public void generate(Random rand, int chunkX, int chunkZ, World world, IChunkProvider chunkGenerator,
         IChunkProvider chunkProvider) {
-
-        int x = chunkX * 16;
-        int z = chunkZ * 16;
-
-        if (world.provider.dimensionId != 0) return;
-
-        if (rand.nextInt(20) != 0) return;
-
+        int x = chunkX * 16 + rand.nextInt(16);
+        int z = chunkZ * 16 + rand.nextInt(16);
         int y = world.getTopSolidOrLiquidBlock(x, z);
-        structure.generate(world, rand, x + rand.nextInt(16), y, z + rand.nextInt(16));
+
+        for (StructureTemplate template : structureDefinitions) {
+            if (rand.nextFloat() > template.rarity) continue;
+            if (!template.canSpawnHere(world, x, z)) continue;
+
+            template.placeInWorld(world, x, y, z, rand);
+            break;
+        }
     }
 }

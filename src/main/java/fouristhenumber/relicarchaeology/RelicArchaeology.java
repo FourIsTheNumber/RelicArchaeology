@@ -19,6 +19,9 @@ import fouristhenumber.relicarchaeology.common.block.RelicBlockDefinition;
 import fouristhenumber.relicarchaeology.common.block.RelicConfigLoader;
 import fouristhenumber.relicarchaeology.common.item.RelicItem;
 import fouristhenumber.relicarchaeology.common.item.RelicItemDefinition;
+import fouristhenumber.relicarchaeology.common.structure.StructureGenHandler;
+import fouristhenumber.relicarchaeology.common.structure.StructureParser;
+import fouristhenumber.relicarchaeology.common.structure.StructureTemplate;
 
 @Mod(
     modid = RelicArchaeology.MODID,
@@ -41,29 +44,38 @@ public class RelicArchaeology {
     public static List<RelicBlock> relicBlocks = new ArrayList<>();
     public static List<RelicItem> relicItems = new ArrayList<>();
 
+    public static List<StructureTemplate> structureDefinitions;
+
+    public static File configDir;
+
     @Mod.EventHandler
     // preInit "Run before anything else. Read your config, create blocks, items, etc, and register them with the
     // GameRegistry."
     public void preInit(FMLPreInitializationEvent event) {
         proxy.preInit(event);
 
-        File configDir = event.getModConfigurationDirectory();
+        configDir = event.getModConfigurationDirectory();
+
         relicBlockDefinitions = RelicConfigLoader.loadRelicBlocks(configDir);
         relicItemDefinitions = RelicConfigLoader.loadRelicItems(configDir);
 
-        for (RelicBlockDefinition def : relicBlockDefinitions) {
-            RelicBlock relicBlock = new RelicBlock(def.relicBlockName);
-            relicBlock.bindTarget(def.targetBlock, def.targetModId, def.targetMeta);
-            GameRegistry.registerBlock(relicBlock, def.relicBlockName);
-            relicBlocks.add(relicBlock);
+        if (relicBlockDefinitions != null) {
+            for (RelicBlockDefinition def : relicBlockDefinitions) {
+                RelicBlock relicBlock = new RelicBlock(def.relicBlockName);
+                relicBlock.bindTarget(def.targetBlock, def.targetModId, def.targetMeta);
+                GameRegistry.registerBlock(relicBlock, def.relicBlockName);
+                relicBlocks.add(relicBlock);
+            }
         }
 
-        for (RelicItemDefinition def : relicItemDefinitions) {
-            RelicItem relicItem = new RelicItem(def.relicName);
-            relicItem.bindTarget(def.targetItem, def.targetModId, def.targetMeta);
-            GameRegistry.registerItem(relicItem, def.relicName);
-            ClientProxy.registerRelicRenderer(relicItem);
-            relicItems.add(relicItem);
+        if (relicItemDefinitions != null) {
+            for (RelicItemDefinition def : relicItemDefinitions) {
+                RelicItem relicItem = new RelicItem(def.relicName);
+                relicItem.bindTarget(def.targetItem, def.targetModId, def.targetMeta);
+                GameRegistry.registerItem(relicItem, def.relicName);
+                ClientProxy.registerRelicRenderer(relicItem);
+                relicItems.add(relicItem);
+            }
         }
 
         RelicConfigLoader.generateMissingLangEntries(relicBlockDefinitions, relicItemDefinitions, configDir);
@@ -74,6 +86,10 @@ public class RelicArchaeology {
     // load "Do your mod setup. Build whatever data structures you care about. Register recipes." (Remove if not needed)
     public void init(FMLInitializationEvent event) {
         proxy.init(event);
+
+        structureDefinitions = StructureParser.loadAll();
+
+        GameRegistry.registerWorldGenerator(new StructureGenHandler(), 0);
     }
 
     @Mod.EventHandler
@@ -87,6 +103,7 @@ public class RelicArchaeology {
         for (RelicItem relicItem : relicItems) {
             relicItem.activateBinding();
         }
+
     }
 
     @Mod.EventHandler
