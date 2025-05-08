@@ -1,10 +1,8 @@
 package fouristhenumber.relicarchaeology;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.List;
-
-import net.minecraft.block.Block;
-import net.minecraft.item.Item;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -17,8 +15,8 @@ import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.event.FMLServerStartingEvent;
 import cpw.mods.fml.common.registry.GameRegistry;
 import fouristhenumber.relicarchaeology.common.block.RelicBlock;
-import fouristhenumber.relicarchaeology.common.block.RelicConfigLoader;
 import fouristhenumber.relicarchaeology.common.block.RelicBlockDefinition;
+import fouristhenumber.relicarchaeology.common.block.RelicConfigLoader;
 import fouristhenumber.relicarchaeology.common.item.RelicItem;
 import fouristhenumber.relicarchaeology.common.item.RelicItemDefinition;
 
@@ -37,42 +35,37 @@ public class RelicArchaeology {
         serverSide = "fouristhenumber.relicarchaeology.CommonProxy")
     public static CommonProxy proxy;
 
-    public static List<RelicBlockDefinition> relicBlocks;
-    public static List<RelicItemDefinition> relicItems;
+    public static List<RelicBlockDefinition> relicBlockDefinitions;
+    public static List<RelicItemDefinition> relicItemDefinitions;
+
+    public static List<RelicBlock> relicBlocks = new ArrayList<>();
+    public static List<RelicItem> relicItems = new ArrayList<>();
 
     @Mod.EventHandler
     // preInit "Run before anything else. Read your config, create blocks, items, etc, and register them with the
-    // GameRegistry." (Remove if not needed)
+    // GameRegistry."
     public void preInit(FMLPreInitializationEvent event) {
         proxy.preInit(event);
 
         File configDir = event.getModConfigurationDirectory();
-        relicBlocks = RelicConfigLoader.loadRelicBlocks(configDir);
-        relicItems = RelicConfigLoader.loadRelicItems(configDir);
+        relicBlockDefinitions = RelicConfigLoader.loadRelicBlocks(configDir);
+        relicItemDefinitions = RelicConfigLoader.loadRelicItems(configDir);
 
-        for (RelicBlockDefinition def : relicBlocks) {
-            Block targetBlock = GameRegistry.findBlock(def.targetModId, def.targetBlock);
-            if (targetBlock == null) {
-                System.err.println("Relic target block not found: " + def.targetModId + ":" + def.targetBlock);
-                continue;
-            }
-
-            Block relicBlock = new RelicBlock(targetBlock, def.targetMeta);
+        for (RelicBlockDefinition def : relicBlockDefinitions) {
+            RelicBlock relicBlock = new RelicBlock(def.relicBlockName);
+            relicBlock.bindTarget(def.targetBlock, def.targetModId, def.targetMeta);
             GameRegistry.registerBlock(relicBlock, def.relicBlockName);
+            relicBlocks.add(relicBlock);
         }
 
-        for (RelicItemDefinition def : relicItems) {
-            Item targetItem = GameRegistry.findItem(def.targetModId, def.targetItem);
-            if (targetItem == null) {
-                System.err.println("Relic target item not found: " + def.targetModId + ":" + def.targetItem);
-                continue;
-            }
-
-            Item relicItem = new RelicItem(def.relicName, targetItem, def.targetMeta);
+        for (RelicItemDefinition def : relicItemDefinitions) {
+            RelicItem relicItem = new RelicItem(def.relicName);
+            relicItem.bindTarget(def.targetItem, def.targetModId, def.targetMeta);
             GameRegistry.registerItem(relicItem, def.relicName);
+            relicItems.add(relicItem);
         }
 
-        RelicConfigLoader.generateMissingLangEntries(relicBlocks, relicItems, configDir);
+        RelicConfigLoader.generateMissingLangEntries(relicBlockDefinitions, relicItemDefinitions, configDir);
         RelicConfigLoader.loadCustomLang(configDir);
     }
 
@@ -86,6 +79,13 @@ public class RelicArchaeology {
     // postInit "Handle interaction with other mods, complete your setup based on this." (Remove if not needed)
     public void postInit(FMLPostInitializationEvent event) {
         proxy.postInit(event);
+
+        for (RelicBlock relicBlock : relicBlocks) {
+            relicBlock.activateBinding();
+        }
+        for (RelicItem relicItem : relicItems) {
+            relicItem.activateBinding();
+        }
     }
 
     @Mod.EventHandler

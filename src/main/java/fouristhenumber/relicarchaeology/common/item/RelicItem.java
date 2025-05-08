@@ -9,25 +9,41 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.world.World;
 
+import cpw.mods.fml.common.registry.GameRegistry;
+
 public class RelicItem extends Item {
 
     private final String relicName;
-    private final Item targetItem;
-    private final int targetMeta;
+    private String targetModId;
+    private String targetItem;
+    private int targetMeta;
 
-    public RelicItem(String relicName, Item targetItem, int targetMeta) {
+    private Item relic;
+
+    public RelicItem(String relicName) {
         this.relicName = relicName;
-        this.targetItem = targetItem;
-        this.targetMeta = targetMeta;
         this.setUnlocalizedName("relicarchaeology." + relicName);
     }
 
-    public String getRelicName() {
-        return relicName;
+    // Run during preInit to populate config file values
+    public void bindTarget(String targetItem, String targetModId, int targetMeta) {
+        this.targetItem = targetItem;
+        this.targetModId = targetModId;
+        this.targetMeta = targetMeta;
+    }
+
+    // Run during postInit to actually find the relevant blocks
+    public void activateBinding() {
+        Item item = GameRegistry.findItem(targetModId, targetItem);
+        if (item == null) {
+            System.err.println("Relic target item not found: " + targetModId + ":" + targetItem);
+            return;
+        }
+        relic = item;
     }
 
     public ItemStack getRestoredItem() {
-        return new ItemStack(targetItem, 1, targetMeta);
+        return new ItemStack(relic, 1, targetMeta);
     }
 
     @Override
@@ -43,6 +59,6 @@ public class RelicItem extends Item {
 
     @Override
     public void registerIcons(IIconRegister register) {
-        this.itemIcon = register.registerIcon("relicmod:generated/" + relicName);
+        this.itemIcon = register.registerIcon("relicarchaeology:generated/" + relicName);
     }
 }
