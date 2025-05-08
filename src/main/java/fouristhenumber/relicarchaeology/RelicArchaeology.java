@@ -4,6 +4,7 @@ import java.io.File;
 import java.util.List;
 
 import net.minecraft.block.Block;
+import net.minecraft.item.Item;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -17,7 +18,9 @@ import cpw.mods.fml.common.event.FMLServerStartingEvent;
 import cpw.mods.fml.common.registry.GameRegistry;
 import fouristhenumber.relicarchaeology.common.block.RelicBlock;
 import fouristhenumber.relicarchaeology.common.block.RelicConfigLoader;
-import fouristhenumber.relicarchaeology.common.block.RelicDefinition;
+import fouristhenumber.relicarchaeology.common.block.RelicBlockDefinition;
+import fouristhenumber.relicarchaeology.common.item.RelicItem;
+import fouristhenumber.relicarchaeology.common.item.RelicItemDefinition;
 
 @Mod(
     modid = RelicArchaeology.MODID,
@@ -34,7 +37,8 @@ public class RelicArchaeology {
         serverSide = "fouristhenumber.relicarchaeology.CommonProxy")
     public static CommonProxy proxy;
 
-    public static List<RelicDefinition> relics;
+    public static List<RelicBlockDefinition> relicBlocks;
+    public static List<RelicItemDefinition> relicItems;
 
     @Mod.EventHandler
     // preInit "Run before anything else. Read your config, create blocks, items, etc, and register them with the
@@ -43,9 +47,10 @@ public class RelicArchaeology {
         proxy.preInit(event);
 
         File configDir = event.getModConfigurationDirectory();
-        relics = RelicConfigLoader.loadRelics(configDir);
+        relicBlocks = RelicConfigLoader.loadRelicBlocks(configDir);
+        relicItems = RelicConfigLoader.loadRelicItems(configDir);
 
-        for (RelicDefinition def : relics) {
+        for (RelicBlockDefinition def : relicBlocks) {
             Block targetBlock = GameRegistry.findBlock(def.targetModId, def.targetBlock);
             if (targetBlock == null) {
                 System.err.println("Relic target block not found: " + def.targetModId + ":" + def.targetBlock);
@@ -56,7 +61,18 @@ public class RelicArchaeology {
             GameRegistry.registerBlock(relicBlock, def.relicBlockName);
         }
 
-        RelicConfigLoader.generateMissingLangEntries(relics, configDir);
+        for (RelicItemDefinition def : relicItems) {
+            Item targetItem = GameRegistry.findItem(def.targetModId, def.targetItem);
+            if (targetItem == null) {
+                System.err.println("Relic target item not found: " + def.targetModId + ":" + def.targetItem);
+                continue;
+            }
+
+            Item relicItem = new RelicItem(def.relicName, targetItem, def.targetMeta);
+            GameRegistry.registerItem(relicItem, def.relicName);
+        }
+
+        RelicConfigLoader.generateMissingLangEntries(relicBlocks, relicItems, configDir);
         RelicConfigLoader.loadCustomLang(configDir);
     }
 

@@ -1,13 +1,13 @@
 package fouristhenumber.relicarchaeology.common.block;
 
-public class RelicDefinition {
+public class RelicBlockDefinition {
 
     public String relicBlockName;
     public String targetModId;
     public String targetBlock;
     public int targetMeta;
 
-    public RelicDefinition() {
+    public RelicBlockDefinition() {
         this.targetMeta = 0;
     }
 }

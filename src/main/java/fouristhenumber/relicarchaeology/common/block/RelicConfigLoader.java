@@ -17,19 +17,37 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
 import cpw.mods.fml.common.registry.LanguageRegistry;
+import fouristhenumber.relicarchaeology.common.item.RelicItemDefinition;
 
 public class RelicConfigLoader {
 
-    public static List<RelicDefinition> loadRelics(File configDir) {
+    public static List<RelicBlockDefinition> loadRelicBlocks(File configDir) {
         File file = new File(configDir, "relicarchaeology/relic_blocks.json");
 
         if (!file.exists()) {
-            createDefaultConfig(file);
+            createDefaultBlockConfig(file);
         }
 
         try (Reader reader = new FileReader(file)) {
             Gson gson = new Gson();
-            Type listType = new TypeToken<List<RelicDefinition>>() {}.getType();
+            Type listType = new TypeToken<List<RelicBlockDefinition>>() {}.getType();
+            return gson.fromJson(reader, listType);
+        } catch (IOException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    public static List<RelicItemDefinition> loadRelicItems(File configDir) {
+        File file = new File(configDir, "relicarchaeology/relic_items.json");
+
+        if (!file.exists()) {
+            createDefaultItemConfig(file);
+        }
+
+        try (Reader reader = new FileReader(file)) {
+            Gson gson = new Gson();
+            Type listType = new TypeToken<List<RelicItemDefinition>>() {}.getType();
             return gson.fromJson(reader, listType);
         } catch (IOException e) {
             e.printStackTrace();
@@ -57,7 +75,7 @@ public class RelicConfigLoader {
         }
     }
 
-    private static void createDefaultConfig(File file) {
+    private static void createDefaultBlockConfig(File file) {
         try {
             file.getParentFile()
                 .mkdirs();
@@ -72,7 +90,23 @@ public class RelicConfigLoader {
         }
     }
 
-    public static void generateMissingLangEntries(List<RelicDefinition> relics, File configDir) {
+    private static void createDefaultItemConfig(File file) {
+        try {
+            file.getParentFile()
+                .mkdirs();
+            PrintWriter writer = new PrintWriter(file);
+            writer.println("[");
+            writer.println(
+                "  { \"relicName\": \"relic_diamond_sword\", \"targetModId\": \"minecraft\", \"targetItem\": \"diamond_sword\", \"targetMeta\": 0 }");
+            writer.println("]");
+            writer.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static void generateMissingLangEntries(List<RelicBlockDefinition> relicBlocks,
+        List<RelicItemDefinition> relicItems, File configDir) {
         File langFile = new File(configDir, "relicarchaeology/lang/en_US.cfg");
         langFile.getParentFile()
             .mkdirs();
@@ -89,8 +123,16 @@ public class RelicConfigLoader {
 
         boolean modified = false;
 
-        for (RelicDefinition def : relics) {
+        for (RelicBlockDefinition def : relicBlocks) {
             String key = "tile." + def.relicBlockName + ".name";
+            if (!props.containsKey(key)) {
+                props.setProperty(key, "REPLACE_ME");
+                modified = true;
+            }
+        }
+
+        for (RelicItemDefinition def : relicItems) {
+            String key = "item.relicarchaeology." + def.relicName + ".name";
             if (!props.containsKey(key)) {
                 props.setProperty(key, "REPLACE_ME");
                 modified = true;
