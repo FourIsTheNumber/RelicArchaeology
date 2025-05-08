@@ -1,8 +1,9 @@
 package fouristhenumber.relicarchaeology;
 
-import fouristhenumber.relicarchaeology.common.item.RelicItemRenderer;
 import net.minecraft.item.Item;
 import net.minecraftforge.client.MinecraftForgeClient;
+
+import fouristhenumber.relicarchaeology.common.item.RelicItemRenderer;
 
 public class ClientProxy extends CommonProxy {
 
