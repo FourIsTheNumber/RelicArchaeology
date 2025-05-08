@@ -1,0 +1,8 @@
+[
+  {
+    "relicBlockName": "relic_enchantmentTable",
+    "targetModId": "minecraft",
+    "targetBlock": "enchanting_table",
+    "targetMeta": 0
+  }
+]

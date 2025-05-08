@@ -4,20 +4,25 @@ import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.event.FMLServerStartingEvent;
+import cpw.mods.fml.common.registry.GameRegistry;
+import fouristhenumber.relicarchaeology.common.block.ModBlocks;
+import fouristhenumber.relicarchaeology.common.structure.StructureGenHandler;
 
 public class CommonProxy {
 
-    // preInit "Run before anything else. Read your config, create blocks, items, etc, and register them with the
-    // GameRegistry." (Remove if not needed)
     public void preInit(FMLPreInitializationEvent event) {
         Config.synchronizeConfiguration(event.getSuggestedConfigurationFile());
+
+        ModBlocks.init();
 
         RelicArchaeology.LOG.info(Config.greeting);
         RelicArchaeology.LOG.info("I am RelicArchaeology at version " + Tags.VERSION);
     }
 
     // load "Do your mod setup. Build whatever data structures you care about. Register recipes." (Remove if not needed)
-    public void init(FMLInitializationEvent event) {}
+    public void init(FMLInitializationEvent event) {
+        GameRegistry.registerWorldGenerator(new StructureGenHandler(), 0);
+    }
 
     // postInit "Handle interaction with other mods, complete your setup based on this." (Remove if not needed)
     public void postInit(FMLPostInitializationEvent event) {}

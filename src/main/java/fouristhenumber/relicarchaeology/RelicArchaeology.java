@@ -1,5 +1,10 @@
 package fouristhenumber.relicarchaeology;
 
+import java.io.File;
+import java.util.List;
+
+import net.minecraft.block.Block;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -9,6 +14,10 @@ import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.event.FMLServerStartingEvent;
+import cpw.mods.fml.common.registry.GameRegistry;
+import fouristhenumber.relicarchaeology.common.block.RelicBlock;
+import fouristhenumber.relicarchaeology.common.block.RelicConfigLoader;
+import fouristhenumber.relicarchaeology.common.block.RelicDefinition;
 
 @Mod(
     modid = RelicArchaeology.MODID,
@@ -25,11 +34,30 @@ public class RelicArchaeology {
         serverSide = "fouristhenumber.relicarchaeology.CommonProxy")
     public static CommonProxy proxy;
 
+    public static List<RelicDefinition> relics;
+
     @Mod.EventHandler
     // preInit "Run before anything else. Read your config, create blocks, items, etc, and register them with the
     // GameRegistry." (Remove if not needed)
     public void preInit(FMLPreInitializationEvent event) {
         proxy.preInit(event);
+
+        File configDir = event.getModConfigurationDirectory();
+        relics = RelicConfigLoader.loadRelics(configDir);
+
+        for (RelicDefinition def : relics) {
+            Block targetBlock = GameRegistry.findBlock(def.targetModId, def.targetBlock);
+            if (targetBlock == null) {
+                System.err.println("Relic target block not found: " + def.targetModId + ":" + def.targetBlock);
+                continue;
+            }
+
+            Block relicBlock = new RelicBlock(targetBlock, def.targetMeta);
+            GameRegistry.registerBlock(relicBlock, def.relicBlockName);
+        }
+
+        RelicConfigLoader.generateMissingLangEntries(relics, configDir);
+        RelicConfigLoader.loadCustomLang(configDir);
     }
 
     @Mod.EventHandler
