@@ -25,6 +25,18 @@ public class RelicItem extends Item {
         this.setUnlocalizedName("relicarchaeology." + relicName);
     }
 
+    public String getRelicName() {
+        return relicName;
+    }
+
+    public Item getRelic() {
+        return relic;
+    }
+
+    public int getTargetMeta() {
+        return targetMeta;
+    }
+
     // Run during preInit to populate config file values
     public void bindTarget(String targetItem, String targetModId, int targetMeta) {
         this.targetItem = targetItem;
