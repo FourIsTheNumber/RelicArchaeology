@@ -85,8 +85,6 @@ public class RelicArchaeology {
         RelicConfigLoader.generateMissingLangEntries(relicBlockDefinitions, relicItemDefinitions, configDir);
         RelicConfigLoader.loadCustomLang(configDir);
 
-        BlockDisplayPedestal displayPedestalBlock = new BlockDisplayPedestal();
-        GameRegistry.registerBlock(displayPedestalBlock, "relic_display_pedestal");
         GameRegistry.registerTileEntity(TileEntityDisplayPedestal.class, "relic_display_pedestal");
 
         ClientRegistry.bindTileEntitySpecialRenderer(TileEntityDisplayPedestal.class, new RenderDisplayPedestal());

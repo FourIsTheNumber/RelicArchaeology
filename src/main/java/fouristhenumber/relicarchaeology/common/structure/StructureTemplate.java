@@ -1,6 +1,8 @@
 package fouristhenumber.relicarchaeology.common.structure;
 
 import static fouristhenumber.relicarchaeology.RelicArchaeology.relicBlocks;
+import static fouristhenumber.relicarchaeology.RelicArchaeology.relicItems;
+import static fouristhenumber.relicarchaeology.common.block.ModBlocks.displayPedestalBlock;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -9,9 +11,13 @@ import java.util.Map;
 import java.util.Random;
 import java.util.Set;
 
+import fouristhenumber.relicarchaeology.common.block.BlockDisplayPedestal;
 import net.minecraft.block.Block;
 import net.minecraft.init.Blocks;
+import net.minecraft.inventory.IInventory;
+import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.BiomeGenBase;
 
@@ -39,11 +45,20 @@ public class StructureTemplate {
                     Block blockToPlace;
                     int meta = 0;
 
+                    ItemStack relicItem = null;
+
                     // Special cases:
                     // R = random relic block
                     // space = air
                     if (key == 'R') {
-                        blockToPlace = relicBlocks.get(rand.nextInt(relicBlocks.size()));
+                        int relicIndex = rand.nextInt(relicBlocks.size() + relicItems.size());
+                        if (relicIndex >= relicItems.size()) {
+                            relicIndex -= relicItems.size();
+                            blockToPlace = relicBlocks.get(relicIndex);
+                        } else {
+                            relicItem = new ItemStack(relicItems.get(relicIndex), 1);
+                            blockToPlace = displayPedestalBlock;
+                        }
                     } else if (key == ' ') {
                         continue;
                     } else {
@@ -69,6 +84,14 @@ public class StructureTemplate {
                     int worldZ = z + row;
 
                     world.setBlock(worldX, worldY, worldZ, blockToPlace, meta, 2);
+
+                    // If trying to place a relicItem, find the inventory and deposit it
+                    if (relicItem != null) {
+                        TileEntity tile = world.getTileEntity(worldX, worldY, worldZ);
+                        if (tile instanceof IInventory invTile) {
+                            invTile.setInventorySlotContents(0, relicItem);
+                        }
+                    }
                 }
             }
         }

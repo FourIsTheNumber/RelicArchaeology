@@ -5,6 +5,7 @@ import net.minecraft.block.material.Material;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.init.Blocks;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.IIcon;
@@ -15,16 +16,22 @@ import cpw.mods.fml.relauncher.SideOnly;
 
 public class BlockDisplayPedestal extends BlockContainer {
 
+    ItemStack cachedItem;
+
     public BlockDisplayPedestal() {
         super(Material.rock);
         setBlockName("relic_display_pedestal");
-        setBlockTextureName("yourmod:display_pedestal");
+        setBlockTextureName("relicarchaeology:display_pedestal");
         setHardness(1.5F);
     }
 
     @Override
     public TileEntity createNewTileEntity(World world, int meta) {
         return new TileEntityDisplayPedestal();
+    }
+
+    public void setCachedItem(ItemStack cachedItem) {
+        this.cachedItem = cachedItem;
     }
 
     @Override
