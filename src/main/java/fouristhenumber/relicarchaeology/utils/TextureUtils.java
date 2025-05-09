@@ -1,6 +1,6 @@
 package fouristhenumber.relicarchaeology.utils;
 
-import java.awt.*;
+import java.awt.Color;
 import java.awt.image.BufferedImage;
 import java.io.InputStream;
 

@@ -1,7 +1,5 @@
 package fouristhenumber.relicarchaeology.common.block;
 
-import java.awt.*;
-
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.player.EntityPlayer;

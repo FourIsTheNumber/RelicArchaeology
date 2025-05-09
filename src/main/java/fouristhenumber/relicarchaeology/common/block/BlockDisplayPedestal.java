@@ -5,7 +5,6 @@ import net.minecraft.block.material.Material;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.init.Blocks;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.IIcon;
@@ -20,7 +19,7 @@ public class BlockDisplayPedestal extends BlockContainer {
 
     public BlockDisplayPedestal() {
         super(Material.rock);
-        setBlockName("relic_display_pedestal");
+        setBlockName("relicDisplayPedestal");
         setBlockTextureName("relicarchaeology:display_pedestal");
         setHardness(1.5F);
     }

@@ -8,6 +8,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import cpw.mods.fml.client.registry.ClientRegistry;
+import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.SidedProxy;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
@@ -15,7 +16,6 @@ import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.event.FMLServerStartingEvent;
 import cpw.mods.fml.common.registry.GameRegistry;
-import fouristhenumber.relicarchaeology.common.block.BlockDisplayPedestal;
 import fouristhenumber.relicarchaeology.common.block.RelicBlock;
 import fouristhenumber.relicarchaeology.common.block.RelicBlockDefinition;
 import fouristhenumber.relicarchaeology.common.block.RelicConfigLoader;
@@ -26,6 +26,7 @@ import fouristhenumber.relicarchaeology.common.item.RelicItemDefinition;
 import fouristhenumber.relicarchaeology.common.structure.StructureGenHandler;
 import fouristhenumber.relicarchaeology.common.structure.StructureParser;
 import fouristhenumber.relicarchaeology.common.structure.StructureTemplate;
+import fouristhenumber.relicarchaeology.crossmod.waila.Waila;
 
 @Mod(
     modid = RelicArchaeology.MODID,
@@ -85,7 +86,7 @@ public class RelicArchaeology {
         RelicConfigLoader.generateMissingLangEntries(relicBlockDefinitions, relicItemDefinitions, configDir);
         RelicConfigLoader.loadCustomLang(configDir);
 
-        GameRegistry.registerTileEntity(TileEntityDisplayPedestal.class, "relic_display_pedestal");
+        GameRegistry.registerTileEntity(TileEntityDisplayPedestal.class, "relicDisplayPedestal");
 
         ClientRegistry.bindTileEntitySpecialRenderer(TileEntityDisplayPedestal.class, new RenderDisplayPedestal());
     }
@@ -96,6 +97,10 @@ public class RelicArchaeology {
         proxy.init(event);
 
         structureDefinitions = StructureParser.loadAll();
+
+        if (Loader.isModLoaded("Waila")) {
+            Waila.init();
+        }
 
         GameRegistry.registerWorldGenerator(new StructureGenHandler(), 0);
     }
