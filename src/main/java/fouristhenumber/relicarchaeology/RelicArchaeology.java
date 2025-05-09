@@ -7,6 +7,7 @@ import java.util.List;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import cpw.mods.fml.client.registry.ClientRegistry;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.SidedProxy;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
@@ -14,9 +15,12 @@ import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.event.FMLServerStartingEvent;
 import cpw.mods.fml.common.registry.GameRegistry;
+import fouristhenumber.relicarchaeology.common.block.BlockDisplayPedestal;
 import fouristhenumber.relicarchaeology.common.block.RelicBlock;
 import fouristhenumber.relicarchaeology.common.block.RelicBlockDefinition;
 import fouristhenumber.relicarchaeology.common.block.RelicConfigLoader;
+import fouristhenumber.relicarchaeology.common.block.RenderDisplayPedestal;
+import fouristhenumber.relicarchaeology.common.block.TileEntityDisplayPedestal;
 import fouristhenumber.relicarchaeology.common.item.RelicItem;
 import fouristhenumber.relicarchaeology.common.item.RelicItemDefinition;
 import fouristhenumber.relicarchaeology.common.structure.StructureGenHandler;
@@ -80,6 +84,12 @@ public class RelicArchaeology {
 
         RelicConfigLoader.generateMissingLangEntries(relicBlockDefinitions, relicItemDefinitions, configDir);
         RelicConfigLoader.loadCustomLang(configDir);
+
+        BlockDisplayPedestal displayPedestalBlock = new BlockDisplayPedestal();
+        GameRegistry.registerBlock(displayPedestalBlock, "relic_display_pedestal");
+        GameRegistry.registerTileEntity(TileEntityDisplayPedestal.class, "relic_display_pedestal");
+
+        ClientRegistry.bindTileEntitySpecialRenderer(TileEntityDisplayPedestal.class, new RenderDisplayPedestal());
     }
 
     @Mod.EventHandler

@@ -67,6 +67,7 @@ public class RelicItemRenderer implements IItemRenderer {
 
             Minecraft.getMinecraft().renderEngine.bindTexture(texture);
 
+            applyStandardItemTransform(type);
             switch (type) {
                 case ENTITY -> {
                     if (Minecraft.getMinecraft().gameSettings.fancyGraphics) {
@@ -118,6 +119,24 @@ public class RelicItemRenderer implements IItemRenderer {
                     tessellator.draw();
                 }
                 default -> {}
+            }
+        }
+    }
+
+    public static void applyStandardItemTransform(IItemRenderer.ItemRenderType type) {
+        if (type == IItemRenderer.ItemRenderType.ENTITY) {
+            if (RenderItem.renderInFrame) {
+                // Magic numbers calculated from vanilla code
+                GL11.glScalef(1.025641F, 1.025641F, 1.025641F);
+                GL11.glTranslatef(0.0F, -0.05F, 0.0F);
+            }
+
+            if (Minecraft.getMinecraft().gameSettings.fancyGraphics) {
+                if (RenderItem.renderInFrame) {
+                    GL11.glRotatef(180.0F, 0.0F, 1.0F, 0.0F);
+                }
+                // Magic numbers calculated from vanilla code
+                GL11.glTranslatef(-0.5F, -0.25F, 0.0421875F);
             }
         }
     }
