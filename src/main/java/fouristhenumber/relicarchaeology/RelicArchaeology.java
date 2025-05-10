@@ -55,7 +55,6 @@ public class RelicArchaeology {
     // preInit "Run before anything else. Read your config, create blocks, items, etc, and register them with the
     // GameRegistry."
     public void preInit(FMLPreInitializationEvent event) {
-        proxy.preInit(event);
 
         configDir = event.getModConfigurationDirectory();
 
@@ -76,7 +75,6 @@ public class RelicArchaeology {
                 RelicItem relicItem = new RelicItem(def.relicName);
                 relicItem.bindTarget(def.targetItem, def.targetModId, def.targetMeta);
                 GameRegistry.registerItem(relicItem, def.relicName);
-                ClientProxy.registerRelicRenderer(relicItem);
                 relicItems.add(relicItem);
             }
         }
@@ -85,6 +83,8 @@ public class RelicArchaeology {
         RelicConfigLoader.loadCustomLang(configDir);
 
         GameRegistry.registerTileEntity(TileEntityDisplayPedestal.class, "relicDisplayPedestal");
+
+        proxy.preInit(event);
     }
 
     @Mod.EventHandler
