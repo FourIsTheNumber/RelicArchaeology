@@ -15,16 +15,13 @@ import fouristhenumber.relicarchaeology.common.item.RelicItemRenderer;
 
 public class ClientProxy extends CommonProxy {
 
-    // Override CommonProxy methods here, if you want a different behaviour on the client (e.g. registering renders).
-    // Don't forget to call the super methods as well.
-
     @Override
     public void preInit(FMLPreInitializationEvent event) {
         ClientRegistry.bindTileEntitySpecialRenderer(TileEntityDisplayPedestal.class, new RenderDisplayPedestal());
         RenderingRegistry.registerBlockHandler(new RenderPedestalInventory());
 
         if (relicItems != null) {
-            for (RelicItem relicItem : relicItems) {
+            for (RelicItem relicItem : relicItems.values()) {
                 MinecraftForgeClient.registerItemRenderer(relicItem, RelicItemRenderer.INSTANCE);
             }
         }

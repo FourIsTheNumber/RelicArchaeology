@@ -36,6 +36,7 @@ public class StructureParser {
                     continue;
                 }
 
+                template.applyDefaults();
                 templates.add(template);
                 System.out.println("[RelicArchaeology] Loaded structure: " + template.name);
             } catch (IOException | JsonSyntaxException e) {

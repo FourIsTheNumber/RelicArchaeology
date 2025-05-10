@@ -1,11 +1,12 @@
 package fouristhenumber.relicarchaeology.common.structure;
 
-import static fouristhenumber.relicarchaeology.RelicArchaeology.relicBlocks;
-import static fouristhenumber.relicarchaeology.RelicArchaeology.relicItems;
 import static fouristhenumber.relicarchaeology.common.block.ModBlocks.displayPedestalBlock;
+import static fouristhenumber.relicarchaeology.utils.RelicRegistry.getRelicInSet;
+import static fouristhenumber.relicarchaeology.utils.RelicRegistry.getRelicsInCategory;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
@@ -20,7 +21,11 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.BiomeGenBase;
 
+import com.google.common.collect.ImmutableSet;
+
 import cpw.mods.fml.common.registry.GameRegistry;
+import fouristhenumber.relicarchaeology.common.block.RelicBlock;
+import fouristhenumber.relicarchaeology.common.item.RelicItem;
 
 public class StructureTemplate {
 
@@ -28,9 +33,14 @@ public class StructureTemplate {
     public Set<String> allowedBiomes;
     public Set<Integer> allowedDimensions;
     public float rarity;
+    public Set<String> allowedCategories;
 
     public Map<Character, String> palette = new HashMap<>();
     public List<List<String>> structure = new ArrayList<>();
+
+    public void applyDefaults() {
+        if (allowedCategories == null) allowedCategories = ImmutableSet.of("DEFAULT");
+    }
 
     public void placeInWorld(World world, int x, int y, int z, Random rand) {
         int height = structure.size();
@@ -41,7 +51,7 @@ public class StructureTemplate {
                 String line = rows.get(row);
                 for (int col = 0; col < line.length(); col++) {
                     char key = line.charAt(col);
-                    Block blockToPlace;
+                    Block blockToPlace = null;
                     int meta = 0;
 
                     ItemStack relicItem = null;
@@ -50,12 +60,15 @@ public class StructureTemplate {
                     // R = random relic block
                     // space = air
                     if (key == 'R') {
-                        int relicIndex = rand.nextInt(relicBlocks.size() + relicItems.size());
-                        if (relicIndex >= relicItems.size()) {
-                            relicIndex -= relicItems.size();
-                            blockToPlace = relicBlocks.get(relicIndex);
-                        } else {
-                            relicItem = new ItemStack(relicItems.get(relicIndex), 1);
+                        Set<String> allowedRelics = new HashSet<>();
+                        for (String category : allowedCategories) {
+                            allowedRelics.addAll(getRelicsInCategory(category));
+                        }
+                        Object relic = getRelicInSet(allowedRelics);
+                        if (relic instanceof RelicBlock rb) {
+                            blockToPlace = rb;
+                        } else if (relic instanceof RelicItem ri) {
+                            relicItem = new ItemStack(ri, 1);
                             blockToPlace = displayPedestalBlock;
                         }
                     } else if (key == ' ') {
