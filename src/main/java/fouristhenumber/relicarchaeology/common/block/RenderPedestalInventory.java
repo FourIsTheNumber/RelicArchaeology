@@ -19,8 +19,7 @@ public class RenderPedestalInventory implements ISimpleBlockRenderingHandler {
     @Override
     public void renderInventoryBlock(Block block, int metadata, int modelId, RenderBlocks renderer) {
         GL11.glPushMatrix();
-        GL11.glTranslatef(0.5F, 1.5F, 0.5F);
-
+        GL11.glTranslatef(0.5F, 1.4F, 0.5F);
         GL11.glScalef(1.0F, -1.0F, -1.0F);
 
         Minecraft.getMinecraft()

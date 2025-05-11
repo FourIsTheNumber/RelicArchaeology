@@ -6,6 +6,7 @@ import java.io.InputStream;
 
 import javax.imageio.ImageIO;
 
+import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
 import net.minecraft.item.Item;
 import net.minecraft.util.IIcon;
@@ -63,5 +64,27 @@ public class TextureUtils {
         }
 
         return result;
+    }
+
+    public static BufferedImage loadBlockTexture(Block block, int meta) {
+        IIcon icon = block.getIcon(1, meta);
+        if (icon == null) return null;
+
+        String iconName = icon.getIconName(); // modid:texture
+        String[] split = iconName.contains(":") ? iconName.split(":") : new String[] { "minecraft", iconName };
+        String modid = split[0];
+        String tex = split[1];
+
+        ResourceLocation res = new ResourceLocation(modid, "textures/blocks/" + tex + ".png");
+
+        try (InputStream stream = Minecraft.getMinecraft()
+            .getResourceManager()
+            .getResource(res)
+            .getInputStream()) {
+            return ImageIO.read(stream);
+        } catch (Exception e) {
+            System.err.println("[RelicMod] Failed to load block texture: " + res);
+            return null;
+        }
     }
 }

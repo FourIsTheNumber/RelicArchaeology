@@ -1,4 +1,4 @@
-package fouristhenumber.relicarchaeology.common.block;
+package fouristhenumber.relicarchaeology.utils;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -17,6 +17,7 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
 import cpw.mods.fml.common.registry.LanguageRegistry;
+import fouristhenumber.relicarchaeology.common.block.relicblock.RelicBlockDefinition;
 import fouristhenumber.relicarchaeology.common.item.RelicItemDefinition;
 
 public class RelicConfigLoader {

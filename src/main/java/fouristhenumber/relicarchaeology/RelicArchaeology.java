@@ -17,16 +17,17 @@ import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.event.FMLServerStartingEvent;
 import cpw.mods.fml.common.registry.GameRegistry;
-import fouristhenumber.relicarchaeology.common.block.RelicBlock;
-import fouristhenumber.relicarchaeology.common.block.RelicBlockDefinition;
-import fouristhenumber.relicarchaeology.common.block.RelicConfigLoader;
 import fouristhenumber.relicarchaeology.common.block.TileEntityDisplayPedestal;
+import fouristhenumber.relicarchaeology.common.block.relicblock.RelicBlock;
+import fouristhenumber.relicarchaeology.common.block.relicblock.RelicBlockDefinition;
+import fouristhenumber.relicarchaeology.common.block.relicblock.TileEntityRelicBlock;
 import fouristhenumber.relicarchaeology.common.item.RelicItem;
 import fouristhenumber.relicarchaeology.common.item.RelicItemDefinition;
 import fouristhenumber.relicarchaeology.common.structure.StructureGenHandler;
 import fouristhenumber.relicarchaeology.common.structure.StructureParser;
 import fouristhenumber.relicarchaeology.common.structure.StructureTemplate;
 import fouristhenumber.relicarchaeology.crossmod.waila.Waila;
+import fouristhenumber.relicarchaeology.utils.RelicConfigLoader;
 import fouristhenumber.relicarchaeology.utils.RelicRegistry;
 
 @Mod(
@@ -96,6 +97,7 @@ public class RelicArchaeology {
         RelicConfigLoader.loadCustomLang(configDir);
 
         GameRegistry.registerTileEntity(TileEntityDisplayPedestal.class, "relicDisplayPedestal");
+        GameRegistry.registerTileEntity(TileEntityRelicBlock.class, "relicBlock");
 
         proxy.preInit(event);
     }

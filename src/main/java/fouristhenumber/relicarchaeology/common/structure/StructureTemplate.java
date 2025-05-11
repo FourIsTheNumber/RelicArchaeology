@@ -24,7 +24,7 @@ import net.minecraft.world.biome.BiomeGenBase;
 import com.google.common.collect.ImmutableSet;
 
 import cpw.mods.fml.common.registry.GameRegistry;
-import fouristhenumber.relicarchaeology.common.block.RelicBlock;
+import fouristhenumber.relicarchaeology.common.block.relicblock.RelicBlock;
 import fouristhenumber.relicarchaeology.common.item.RelicItem;
 
 public class StructureTemplate {

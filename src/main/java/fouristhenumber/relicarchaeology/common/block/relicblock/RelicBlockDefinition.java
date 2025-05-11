@@ -1,4 +1,4 @@
-package fouristhenumber.relicarchaeology.common.block;
+package fouristhenumber.relicarchaeology.common.block.relicblock;
 
 import java.util.Set;
 

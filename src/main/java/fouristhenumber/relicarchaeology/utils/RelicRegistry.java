@@ -11,7 +11,7 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
-import fouristhenumber.relicarchaeology.common.block.RelicBlock;
+import fouristhenumber.relicarchaeology.common.block.relicblock.RelicBlock;
 
 public class RelicRegistry {
 
