@@ -1,6 +1,6 @@
 package fouristhenumber.relicarchaeology.common.block.relicblock;
 
-import static fouristhenumber.relicarchaeology.utils.RenderUtils.getOrGenerateTexture;
+import static fouristhenumber.relicarchaeology.utils.RenderUtils.getOrGenerateBlockTexture;
 
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
@@ -22,7 +22,7 @@ public class RenderRelicBlockInventory implements ISimpleBlockRenderingHandler {
     public void renderInventoryBlock(Block block, int metadata, int modelId, RenderBlocks renderer) {
         if (!(block instanceof RelicBlock relic)) return;
 
-        ResourceLocation tex = getOrGenerateTexture(relic.getRelicName(), relic.getRelic(), relic.getTargetMeta());
+        ResourceLocation tex = getOrGenerateBlockTexture(relic.getRelicName(), relic.getRelic(), relic.getTargetMeta());
         Minecraft.getMinecraft()
             .getTextureManager()
             .bindTexture(tex);

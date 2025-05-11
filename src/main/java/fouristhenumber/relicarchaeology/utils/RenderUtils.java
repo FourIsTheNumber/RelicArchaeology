@@ -1,8 +1,8 @@
 package fouristhenumber.relicarchaeology.utils;
 
 import java.awt.image.BufferedImage;
+import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -17,7 +17,7 @@ public class RenderUtils {
 
     private static Map<String, ResourceLocation> dynamicTextures = new HashMap<>();
 
-    public static ResourceLocation getOrGenerateTexture(String relicName, Block relic, int targetMeta) {
+    public static ResourceLocation getOrGenerateBlockTexture(String relicName, Block relic, int targetMeta) {
         ResourceLocation texture = dynamicTextures.get(relicName);
         if (texture != null) return texture;
 
@@ -26,16 +26,17 @@ public class RenderUtils {
 
         BufferedImage sepia = TextureUtils.applySepiaFilter(original);
 
-        try {
-            ResourceLocation override = new ResourceLocation(
-                "relicarchaeology",
-                "textures/blocks/overrides/" + relicName + ".png");
-            InputStream overrideStream = Minecraft.getMinecraft()
-                .getResourceManager()
-                .getResource(override)
-                .getInputStream();
-            sepia = ImageIO.read(overrideStream);
-        } catch (IOException ignored) {}
+        File overrideFile = new File(
+            Minecraft.getMinecraft().mcDataDir,
+            "config/relicarchaeology/textureoverrides/" + relicName + ".png");
+
+        if (overrideFile.exists()) {
+            try {
+                sepia = ImageIO.read(overrideFile);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
 
         DynamicTexture tex = new DynamicTexture(sepia);
         ResourceLocation loc = Minecraft.getMinecraft()

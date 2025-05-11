@@ -1,6 +1,6 @@
 package fouristhenumber.relicarchaeology.common.block.relicblock;
 
-import static fouristhenumber.relicarchaeology.utils.RenderUtils.getOrGenerateTexture;
+import static fouristhenumber.relicarchaeology.utils.RenderUtils.getOrGenerateBlockTexture;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.Tessellator;
@@ -16,7 +16,7 @@ public class RenderRelicBlock extends TileEntitySpecialRenderer {
     public void renderTileEntityAt(TileEntity te, double x, double y, double z, float partialTicks) {
         if (!(te instanceof TileEntityRelicBlock relic)) return;
 
-        ResourceLocation tex = getOrGenerateTexture(relic.relicName, relic.relic, relic.targetMeta);
+        ResourceLocation tex = getOrGenerateBlockTexture(relic.relicName, relic.relic, relic.targetMeta);
 
         GL11.glPushMatrix();
         GL11.glDisable(GL11.GL_LIGHTING);

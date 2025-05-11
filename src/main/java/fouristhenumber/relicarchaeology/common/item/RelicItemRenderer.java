@@ -149,6 +149,19 @@ public class RelicItemRenderer implements IItemRenderer {
         if (original == null) return null;
 
         BufferedImage sepia = TextureUtils.applySepiaFilter(original);
+
+        File overrideFile = new File(
+            Minecraft.getMinecraft().mcDataDir,
+            "config/relicarchaeology/textureoverrides/" + relicName + ".png");
+
+        if (overrideFile.exists()) {
+            try {
+                sepia = ImageIO.read(overrideFile);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+
         DynamicTexture dynTex = new DynamicTexture(sepia);
         if (SAVE_DEBUG_TEXTURES) saveDebugTexture(sepia, relicName);
         return Minecraft.getMinecraft()
