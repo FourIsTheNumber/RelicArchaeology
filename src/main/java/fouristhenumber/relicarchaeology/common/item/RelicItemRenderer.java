@@ -65,7 +65,15 @@ public class RelicItemRenderer implements IItemRenderer {
             float maxV = 1F;
             float maxU = 1F;
 
+            GL11.glPushAttrib(GL11.GL_ALL_ATTRIB_BITS);
+            GL11.glPushMatrix();
+
             Minecraft.getMinecraft().renderEngine.bindTexture(texture);
+
+            GL11.glEnable(GL11.GL_BLEND);
+            GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
+            GL11.glEnable(GL11.GL_ALPHA_TEST);
+            GL11.glDisable(GL11.GL_CULL_FACE);
 
             applyStandardItemTransform(type);
             switch (type) {
@@ -120,6 +128,8 @@ public class RelicItemRenderer implements IItemRenderer {
                 }
                 default -> {}
             }
+            GL11.glPopMatrix();
+            GL11.glPopAttrib();
         }
     }
 
