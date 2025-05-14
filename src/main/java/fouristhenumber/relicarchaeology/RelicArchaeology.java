@@ -6,6 +6,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Random;
 
+import net.minecraftforge.common.MinecraftForge;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -17,16 +19,21 @@ import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.event.FMLServerStartingEvent;
 import cpw.mods.fml.common.registry.GameRegistry;
+import fouristhenumber.relicarchaeology.common.block.ItemRelicBlock;
 import fouristhenumber.relicarchaeology.common.block.TileEntityDisplayPedestal;
 import fouristhenumber.relicarchaeology.common.block.relicblock.RelicBlock;
 import fouristhenumber.relicarchaeology.common.block.relicblock.RelicBlockDefinition;
 import fouristhenumber.relicarchaeology.common.block.relicblock.TileEntityRelicBlock;
+import fouristhenumber.relicarchaeology.common.block.relics.BlockFloating;
+import fouristhenumber.relicarchaeology.common.item.BrushItem;
 import fouristhenumber.relicarchaeology.common.item.RelicItem;
 import fouristhenumber.relicarchaeology.common.item.RelicItemDefinition;
+import fouristhenumber.relicarchaeology.common.item.relics.ItemHungerAxe;
 import fouristhenumber.relicarchaeology.common.structure.StructureGenHandler;
 import fouristhenumber.relicarchaeology.common.structure.StructureParser;
 import fouristhenumber.relicarchaeology.common.structure.StructureTemplate;
 import fouristhenumber.relicarchaeology.crossmod.waila.Waila;
+import fouristhenumber.relicarchaeology.utils.EventHandler;
 import fouristhenumber.relicarchaeology.utils.RelicConfigLoader;
 import fouristhenumber.relicarchaeology.utils.RelicRegistry;
 
@@ -72,7 +79,7 @@ public class RelicArchaeology {
                 def.applyDefaults();
                 RelicBlock relicBlock = new RelicBlock(def.relicBlockName);
                 relicBlock.bindTarget(def.targetBlock, def.targetModId, def.targetMeta);
-                GameRegistry.registerBlock(relicBlock, def.relicBlockName);
+                GameRegistry.registerBlock(relicBlock, ItemRelicBlock.class, def.relicBlockName);
                 for (String s : def.categories) {
                     RelicRegistry.assignRelicToCategory(def.relicBlockName, s);
                 }
@@ -92,6 +99,10 @@ public class RelicArchaeology {
                 relicItems.put(def.relicName, relicItem);
             }
         }
+
+        GameRegistry.registerItem(new BrushItem("brushTier1"), "brushTier1");
+        GameRegistry.registerItem(new ItemHungerAxe(), "hungerAxe");
+        GameRegistry.registerBlock(new BlockFloating(), BlockFloating.ItemBlockFloating.class, "floatingBlock");
 
         RelicConfigLoader.generateMissingLangEntries(relicBlockDefinitions, relicItemDefinitions, configDir);
         RelicConfigLoader.loadCustomLang(configDir);
@@ -114,6 +125,8 @@ public class RelicArchaeology {
         }
 
         GameRegistry.registerWorldGenerator(new StructureGenHandler(), 0);
+
+        MinecraftForge.EVENT_BUS.register(new EventHandler());
     }
 
     @Mod.EventHandler

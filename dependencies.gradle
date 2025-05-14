@@ -36,4 +36,10 @@
 dependencies {
     runtimeOnlyNonPublishable("com.github.GTNewHorizons:NotEnoughItems:2.7.40-GTNH:dev")
     api("com.github.GTNewHorizons:waila:1.8.4:dev")
+
+    api("com.github.GTNewHorizons:ModularUI2:2.2.7-1.7.10:dev")
+
+    //Testing crossmod
+    api('com.github.GTNewHorizons:Botania:1.11.5-GTNH:dev')
+    api('com.github.GTNewHorizons:AppleCore:3.3.4:dev')
 }

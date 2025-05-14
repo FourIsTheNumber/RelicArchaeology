@@ -23,6 +23,7 @@ public class RelicItem extends Item {
     public RelicItem(String relicName) {
         this.relicName = relicName;
         this.setUnlocalizedName("relicarchaeology." + relicName);
+        setMaxStackSize(1);
     }
 
     public String getRelicName() {

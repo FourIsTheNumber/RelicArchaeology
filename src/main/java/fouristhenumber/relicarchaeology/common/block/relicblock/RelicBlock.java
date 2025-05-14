@@ -3,10 +3,16 @@ package fouristhenumber.relicarchaeology.common.block.relicblock;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.Blocks;
+import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.IIcon;
 import net.minecraft.world.World;
 
 import cpw.mods.fml.common.registry.GameRegistry;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
+import fouristhenumber.relicarchaeology.common.item.BrushItem;
 
 public class RelicBlock extends Block {
 
@@ -46,10 +52,13 @@ public class RelicBlock extends Block {
     @Override
     public boolean onBlockActivated(World worldIn, int x, int y, int z, EntityPlayer player, int side, float subX,
         float subY, float subZ) {
-        if (relic != null) {
+        ItemStack heldItem = player.getEquipmentInSlot(0);
+        if (heldItem == null) return false;
+        if (relic != null && heldItem.getItem() instanceof BrushItem) {
             worldIn.setBlock(x, y, z, relic, targetMeta, 3);
+            return true;
         }
-        return true;
+        return false;
     }
 
     public Block getRelic() {
@@ -87,5 +96,12 @@ public class RelicBlock extends Block {
     @Override
     public boolean isOpaqueCube() {
         return false;
+    }
+
+    // Sets icon for Minecraft to use when generating break particles
+    @Override
+    @SideOnly(Side.CLIENT)
+    public IIcon getIcon(int side, int meta) {
+        return Blocks.brown_mushroom_block.getIcon(0, 0);
     }
 }

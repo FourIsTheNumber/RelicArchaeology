@@ -1,3 +1,5 @@
-tile.testBlock.name=Test Block
 tile.relicBlock.name=Relic Block
+tile.floatingBlock.name=Floating Block
 tile.relicDisplayPedestal.name=Ancient Pedestal
+item.brushTier1.name=Simple Brush
+item.hungerAxe.name=Glutton's Axe

@@ -70,7 +70,7 @@ public class TextureUtils {
         IIcon icon = block.getIcon(1, meta);
         if (icon == null) return null;
 
-        String iconName = icon.getIconName(); // modid:texture
+        String iconName = icon.getIconName();
         String[] split = iconName.contains(":") ? iconName.split(":") : new String[] { "minecraft", iconName };
         String modid = split[0];
         String tex = split[1];
@@ -83,7 +83,7 @@ public class TextureUtils {
             .getInputStream()) {
             return ImageIO.read(stream);
         } catch (Exception e) {
-            System.err.println("[RelicMod] Failed to load block texture: " + res);
+            System.err.println("[RelicArchaeology] Failed to load block texture: " + res);
             return null;
         }
     }

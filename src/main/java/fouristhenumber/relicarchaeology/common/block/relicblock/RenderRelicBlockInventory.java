@@ -33,7 +33,7 @@ public class RenderRelicBlockInventory implements ISimpleBlockRenderingHandler {
 
         Tessellator tess = Tessellator.instance;
         GL11.glPushMatrix();
-
+        GL11.glDisable(GL11.GL_LIGHTING);
         GL11.glTranslatef(-0.5F, 0.5F, 0.5F);
         GL11.glScalef(1.0F, -1.0F, -1.0F);
 
@@ -81,7 +81,7 @@ public class RenderRelicBlockInventory implements ISimpleBlockRenderingHandler {
         tess.addVertexWithUV(0, 1, 0, minU, maxV);
 
         tess.draw();
-
+        GL11.glEnable(GL11.GL_LIGHTING);
         GL11.glPopMatrix();
     }
 
